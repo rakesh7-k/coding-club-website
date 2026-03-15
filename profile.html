@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CODE NEXUS — Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha512-6C4YRbnENTSD/jxUNjFtQSNOTU2ngf+CVIyYXlZIRgSIVax4C+c4kSj3eY0aqVBBL2XHfX5fjrI21M6pQh6Zpg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" integrity="sha512-IUg1Cp3xAyl5HakW9nqSbP8hIkWOn3uNVVO9tL1uZ+NAzF3zLXA02lzDQfCMc1+JM0dXnPpZEz2QXOa9VN0v9w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r158/three.min.js" integrity="sha512-d+eWQ29qaa9Nf8KdmimTX6SCrH1LnIEq8mFXyn7UVFpo2n9C+6O7XQ2p0eKlfc9GfFclzb8dXPk0t5bY88bKJg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="firebase-functions.js"></script>
+  <script>
+    // Check authentication before loading the page
+    window.FirebaseAuth.onAuthStateChanged((user) => {
+      if (!user) {
+        // Not authenticated, redirect to login
+        window.location.href = 'login.html';
+      }
+    });
+  </script>
+</head>
+<body data-page="profile" class="app">
+  <header class="topbar flex items-center justify-between px-6">
+    <div class="flex items-center gap-3">
+      <a href="flip.html" class="logo-link">
+        <div id="logo" class="logo-flip w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#2F8D46] to-[#00C853] shadow-[0_0_0_2px_rgba(0,200,83,0.28)] overflow-hidden">
+          <div class="logo-face logo-front">
+            <img src="/images/rit_logo.png" alt="Code Nexus" class="h-full w-full object-contain" />
+          </div>
+          <div class="logo-face logo-back">
+            <img src="/images/gfg_logo.png" alt="GeeksforGeeks" class="h-full w-full object-contain" />
+          </div>
+        </div>
+      </a>
+      <div>
+        <div class="text-sm font-semibold">Code Nexus</div>
+        <div class="text-xs text-text-muted">Profile Settings</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <button class="btn-secondary relative" title="Notifications" id="notificationBtn">🔔</button>
+      <div id="notificationDropdown" class="absolute top-16 right-0 bg-card border border-border rounded-lg shadow-lg p-4 w-80 hidden z-50">
+        <div class="text-sm font-semibold mb-2">Notifications</div>
+        <div id="notificationList" class="space-y-2 max-h-64 overflow-y-auto">
+          <!-- Notifications will be populated here -->
+        </div>
+      </div>
+      <a href="profile.html" class="btn-primary">My Profile</a>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="events.html">Events</a>
+      <a href="resources.html">Resources</a>
+      <a href="guilds.html">Guilds</a>
+      <a href="battle.html">Battle Arena</a>
+      <a href="profile.html" class="active">Profile</a>
+    </aside>
+
+    <main class="content">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="card">
+          <div class="flex items-center gap-4">
+            <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-[#2F8D46] to-[#00C853] grid place-items-center text-white text-2xl font-bold">RK</div>
+            <div>
+              <div class="text-xl font-semibold">Rakesh</div>
+              <div class="text-text-muted text-sm">RIT Campus
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="text-text-muted">Coding Rank</div>
+              <div class="font-semibold">#18</div>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="text-text-muted">Solved Problems</div>
+              <div class="font-semibold">320</div>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="text-text-muted">Current Streak</div>
+              <div class="font-semibold">21 days</div>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <input id="gfgUsername" class="input" placeholder="Enter GfG username" />
+            <button id="gfgButton" class="btn-cta w-full mt-4">View Full GfG Profile</button>
+          </div>
+        </div>
+
+        <div class="card lg:col-span-2">
+          <div class="card-title">Profile Progress</div>
+          <p class="text-text-muted mt-2">Your profile progress helps the club recommend the best guilds and battles.</p>
+
+          <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="card p-4">
+              <div class="text-sm text-text-muted">Completed Quests</div>
+              <div class="text-2xl font-bold mt-2">14</div>
+            </div>
+            <div class="card p-4">
+              <div class="text-sm text-text-muted">Active Guilds</div>
+              <div class="text-2xl font-bold mt-2">1</div>
+            </div>
+            <div class="card p-4">
+              <div class="text-sm text-text-muted">Achievements</div>
+              <div class="text-2xl font-bold mt-2">7</div>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <div class="card-title">Skill Tags</div>
+            <div class="mt-3 flex flex-wrap gap-2">
+              <span class="tag">Graphs</span>
+              <span class="tag">DP</span>
+              <span class="tag">Web Dev</span>
+              <span class="tag">C++</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="mt-16 text-sm text-text-muted">© 2026 CODE NEXUS • Built for RIT Campus Club</footer>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+<script src="script-animated-bg.js"></script>
+</body>
+</html>

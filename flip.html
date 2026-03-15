@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logo Flip Animation</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <style>
+    .logo-link {
+      perspective: 900px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .logo-flip {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      transform-style: preserve-3d;
+      transform-origin: center center;
+    }
+
+    .logo-face {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    .logo-back {
+      transform: rotateY(180deg);
+    }
+
+    .logo-face img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+  </style>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="firebase-functions.js"></script>
+</head>
+<body class="app">
+  <div class="logo-link">
+    <div id="logo" class="logo-flip">
+      <div class="logo-face logo-front">
+        <img src="/images/rit_logo.png" alt="RIT Logo" />
+      </div>
+      <div class="logo-face logo-back">
+        <img src="/images/gfg_logo.png" alt="GeeksforGeeks Logo" />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const logo = document.getElementById('logo');
+    const tl = gsap.timeline({
+      repeat: -1,
+      defaults: { ease: 'power2.inOut', transformPerspective: 800, transformOrigin: 'center center' },
+    });
+
+    tl.to(logo, { rotationY: 180, duration: 0.5, delay: 1.5 });
+    tl.to(logo, { rotationY: 360, duration: 0.5, delay: 1.5 });
+  </script>
+</body>
+</html></content>
+<parameter name="filePath">d:\gfg\flip.html
+

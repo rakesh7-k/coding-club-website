@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CODE NEXUS — Leaderboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha512-6C4YRbnENTSD/jxUNjFtQSNOTU2ngf+CVIyYXlZIRgSIVax4C+c4kSj3eY0aqVBBL2XHfX5fjrI21M6pQh6Zpg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" integrity="sha512-IUg1Cp3xAyl5HakW9nqSbP8hIkWOn3uNVVO9tL1uZ+NAzF3zLXA02lzDQfCMc1+JM0dXnPpZEz2QXOa9VN0v9w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r158/three.min.js" integrity="sha512-d+eWQ29qaa9Nf8KdmimTX6SCrH1LnIEq8mFXyn7UVFpo2n9C+6O7XQ2p0eKlfc9GfFclzb8dXPk0t5bY88bKJg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="firebase-functions.js"></script>
+  <script>
+    // Check authentication before loading the page
+    window.FirebaseAuth.onAuthStateChanged((user) => {
+      if (!user) {
+        // Not authenticated, redirect to login
+        window.location.href = 'login.html';
+      }
+    });
+  </script>
+</head>
+<body data-page="leaderboard" class="app">
+  <header class="topbar flex items-center justify-between px-6">
+    <div class="flex items-center gap-3">
+      <a href="flip.html" class="logo-link">
+        <div id="logo" class="logo-flip w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#2F8D46] to-[#00C853] shadow-[0_0_0_2px_rgba(0,200,83,0.28)] overflow-hidden">
+          <div class="logo-face logo-front">
+            <img src="/images/rit_logo.png" alt="Code Nexus" class="h-full w-full object-contain" />
+          </div>
+          <div class="logo-face logo-back">
+            <img src="/images/gfg_logo.png" alt="GeeksforGeeks" class="h-full w-full object-contain" />
+          </div>
+        </div>
+      </a>
+      <div>
+        <div class="text-sm font-semibold">Code Nexus</div>
+        <div class="text-xs text-text-muted">Rankings & Scores</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="relative hidden md:block">
+        <input class="input pr-10" placeholder="Search users..." />
+        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted">🔎</span>
+      </div>
+      <button class="btn-secondary relative" title="Notifications" id="notificationBtn">🔔</button>
+      <div id="notificationDropdown" class="absolute top-16 right-0 bg-card border border-border rounded-lg shadow-lg p-4 w-80 hidden z-50">
+        <div class="text-sm font-semibold mb-2">Notifications</div>
+        <div id="notificationList" class="space-y-2 max-h-64 overflow-y-auto">
+          <!-- Notifications will be populated here -->
+        </div>
+      </div>
+      <a href="profile.html" class="btn-primary">My Profile</a>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="leaderboard.html" class="active">Leaderboard</a>
+      <a href="events.html">Events</a>
+      <a href="resources.html">Resources</a>
+      <a href="guilds.html">Guilds</a>
+      <a href="battle.html">Battle Arena</a>
+      <a href="profile.html">Profile</a>
+    </aside>
+
+    <main class="content">
+      <div class="card">
+        <div class="card-title">Campus Leaderboard</div>
+        <div class="text-text-muted mt-1">Track who’s climbing the ranks this week — leaderboard resets every Monday.</div>
+
+        <div class="mt-6 overflow-x-auto">
+          <table class="w-full table-auto border-separate border-spacing-y-3 text-left">
+            <thead>
+              <tr class="text-text-muted text-sm">
+                <th class="py-2 pl-4">Rank</th>
+                <th>Name</th>
+                <th>Problems</th>
+                <th>Streak</th>
+                <th>Guild</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboardBody">
+              <tr class="bg-card border border-border rounded-lg">
+                <td class="py-4 pl-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm">1</div>
+                    <div>
+                      <div class="font-semibold">Arjun Kumar</div>
+                      <div class="text-xs text-text-muted">@arjunk</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-4">
+                  <div class="text-2xl font-bold">450</div>
+                  <div class="text-xs text-text-muted">solved</div>
+                </td>
+                <td class="py-4">
+                  <div class="text-2xl font-bold">45</div>
+                  <div class="text-xs text-text-muted">days</div>
+                </td>
+                <td class="py-4">
+                  <span class="tag">DSA Masters</span>
+                </td>
+              </tr>
+              <tr class="bg-card border border-border rounded-lg">
+                <td class="py-4 pl-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-gray-400 to-gray-600 flex items-center justify-center text-white font-bold text-sm">2</div>
+                    <div>
+                      <div class="font-semibold">Priya Lakshmi</div>
+                      <div class="text-xs text-text-muted">@priyal</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-4">
+                  <div class="text-2xl font-bold">420</div>
+                  <div class="text-xs text-text-muted">solved</div>
+                </td>
+                <td class="py-4">
+                  <div class="text-2xl font-bold">38</div>
+                  <div class="text-xs text-text-muted">days</div>
+                </td>
+                <td class="py-4">
+                  <span class="tag">Web Wizards</span>
+                </td>
+              </tr>
+              <tr class="bg-card border border-border rounded-lg">
+                <td class="py-4 pl-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-amber-600 to-amber-800 flex items-center justify-center text-white font-bold text-sm">3</div>
+                    <div>
+                      <div class="font-semibold">Karthik Raja</div>
+                      <div class="text-xs text-text-muted">@karthikr</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-4">
+                  <div class="text-2xl font-bold">395</div>
+                  <div class="text-xs text-text-muted">solved</div>
+                </td>
+                <td class="py-4">
+                  <div class="text-2xl font-bold">42</div>
+                  <div class="text-xs text-text-muted">days</div>
+                </td>
+                <td class="py-4">
+                  <span class="tag">AI Pioneers</span>
+                </td>
+              </tr>
+              <tr class="bg-card border border-border rounded-lg">
+                <td class="py-4 pl-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm">4</div>
+                    <div>
+                      <div class="font-semibold">Anjali Devi</div>
+                      <div class="text-xs text-text-muted">@anjalid</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-4">
+                  <div class="text-2xl font-bold">375</div>
+                  <div class="text-xs text-text-muted">solved</div>
+                </td>
+                <td class="py-4">
+                  <div class="text-2xl font-bold">35</div>
+                  <div class="text-xs text-text-muted">days</div>
+                </td>
+                <td class="py-4">
+                  <span class="tag">DSA Masters</span>
+                </td>
+              </tr>
+              <tr class="bg-card border border-border rounded-lg">
+                <td class="py-4 pl-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm">5</div>
+                    <div>
+                      <div class="font-semibold">Rahul Shankar</div>
+                      <div class="text-xs text-text-muted">@rahuls</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-4">
+                  <div class="text-2xl font-bold">360</div>
+                  <div class="text-xs text-text-muted">solved</div>
+                </td>
+                <td class="py-4">
+                  <div class="text-2xl font-bold">40</div>
+                  <div class="text-xs text-text-muted">days</div>
+                </td>
+                <td class="py-4">
+                  <span class="tag">Web Wizards</span>
+                </td>
+              </tr>
+              <tr class="bg-card border border-border rounded-lg">
+                <td class="py-4 pl-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm">6</div>
+                    <div>
+                      <div class="font-semibold">Kavita Iyer</div>
+                      <div class="text-xs text-text-muted">@kavitai</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-4">
+                  <div class="text-2xl font-bold">340</div>
+                  <div class="text-xs text-text-muted">solved</div>
+                </td>
+                <td class="py-4">
+                  <div class="text-2xl font-bold">33</div>
+                  <div class="text-xs text-text-muted">days</div>
+                </td>
+                <td class="py-4">
+                  <span class="tag">AI Pioneers</span>
+                </td>
+              </tr>
+              <tr class="bg-card border border-border rounded-lg">
+                <td class="py-4 pl-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm">7</div>
+                    <div>
+                      <div class="font-semibold">Amit Narayan</div>
+                      <div class="text-xs text-text-muted">@amitn</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-4">
+                  <div class="text-2xl font-bold">320</div>
+                  <div class="text-xs text-text-muted">solved</div>
+                </td>
+                <td class="py-4">
+                  <div class="text-2xl font-bold">37</div>
+                  <div class="text-xs text-text-muted">days</div>
+                </td>
+                <td class="py-4">
+                  <span class="tag">DSA Masters</span>
+                </td>
+              </tr>
+              <tr class="bg-card border border-border rounded-lg">
+                <td class="py-4 pl-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm">8</div>
+                    <div>
+                      <div class="font-semibold">Sneha Krishnan</div>
+                      <div class="text-xs text-text-muted">@snehak</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-4">
+                  <div class="text-2xl font-bold">305</div>
+                  <div class="text-xs text-text-muted">solved</div>
+                </td>
+                <td class="py-4">
+                  <div class="text-2xl font-bold">30</div>
+                  <div class="text-xs text-text-muted">days</div>
+                </td>
+                <td class="py-4">
+                  <span class="tag">Web Wizards</span>
+                </td>
+              </tr>
+              <tr class="bg-card border border-border rounded-lg">
+                <td class="py-4 pl-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm">9</div>
+                    <div>
+                      <div class="font-semibold">Rohit Venkatesh</div>
+                      <div class="text-xs text-text-muted">@rohitv</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-4">
+                  <div class="text-2xl font-bold">290</div>
+                  <div class="text-xs text-text-muted">solved</div>
+                </td>
+                <td class="py-4">
+                  <div class="text-2xl font-bold">28</div>
+                  <div class="text-xs text-text-muted">days</div>
+                </td>
+                <td class="py-4">
+                  <span class="tag">AI Pioneers</span>
+                </td>
+              </tr>
+              <tr class="bg-card border border-border rounded-lg">
+                <td class="py-4 pl-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm">10</div>
+                    <div>
+                      <div class="font-semibold">Meera Chandran</div>
+                      <div class="text-xs text-text-muted">@meerac</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-4">
+                  <div class="text-2xl font-bold">275</div>
+                  <div class="text-xs text-text-muted">solved</div>
+                </td>
+                <td class="py-4">
+                  <div class="text-2xl font-bold">25</div>
+                  <div class="text-xs text-text-muted">days</div>
+                </td>
+                <td class="py-4">
+                  <span class="tag">DSA Masters</span>
+                </td>
+              </tr>
+              <!-- filled by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <footer class="mt-16 text-sm text-text-muted">© 2026 CODE NEXUS • Built for RIT Campus Club</footer>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+<script src="script-animated-bg.js"></script>
+  <script>
+    // Load leaderboard data
+    window.FirebaseAuth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        window.location.href = 'login.html';
+      } else {
+        await loadLeaderboard();
+      }
+    });
+
+    async function loadLeaderboard() {
+      try {
+        const result = await window.FirebaseAuth.getLeaderboard();
+        if (result.success) {
+          const leaderboard = result.data;
+          const tbody = document.getElementById('leaderboardBody');
+          tbody.innerHTML = '';
+          leaderboard.forEach((user, index) => {
+            const row = document.createElement('tr');
+            row.className = 'bg-card border border-border rounded-lg';
+            row.innerHTML = `
+              <td class="py-4 pl-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm">
+                    ${index + 1}
+                  </div>
+                  <div>
+                    <div class="font-semibold">${user.name || 'Unknown'}</div>
+                    <div class="text-xs text-text-muted">@${user.handle || 'unknown'}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-4">
+                <div class="text-2xl font-bold">${user.solvedProblems || 0}</div>
+                <div class="text-xs text-text-muted">solved</div>
+              </td>
+              <td class="py-4">
+                <div class="text-2xl font-bold">${user.streak || 0}</div>
+                <div class="text-xs text-text-muted">days</div>
+              </td>
+              <td class="py-4">
+                <span class="tag">${user.guild || 'No Guild'}</span>
+              </td>
+            `;
+            tbody.appendChild(row);
+          });
+        }
+      } catch (error) {
+        console.error('Error loading leaderboard:', error);
+      }
+    }
+  </script>
+</body>
+</html>

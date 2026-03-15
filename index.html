@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CODE NEXUS — Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha512-6C4YRbnENTSD/jxUNjFtQSNOTU2ngf+CVIyYXlZIRgSIVax4C+c4kSj3eY0aqVBBL2XHfX5fjrI21M6pQh6Zpg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" integrity="sha512-IUg1Cp3xAyl5HakW9nqSbP8hIkWOn3uNVVO9tL1uZ+NAzF3zLXA02lzDQfCMc1+JM0dXnPpZEz2QXOa9VN0v9w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r158/three.min.js" integrity="sha512-d+eWQ29qaa9Nf8KdmimTX6SCrH1LnIEq8mFXyn7UVFpo2n9C+6O7XQ2p0eKlfc9GfFclzb8dXPk0t5bY88bKJg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="firebase-functions.js"></script>
+  <script>
+    // Check authentication and redirect accordingly
+    window.FirebaseAuth.onAuthStateChanged((user) => {
+      if (user) {
+        // User is logged in, redirect to dashboard
+        window.location.href = 'dashboard.html';
+      } else {
+        // User is not logged in, redirect to login
+        window.location.href = 'login.html';
+      }
+    });
+  </script>
+</head>
+<body data-page="home" class="app">
+  <header class="topbar flex items-center justify-between px-6">
+    <div class="flex items-center gap-3">
+      <a href="flip.html" class="logo-link">
+        <div id="logo" class="logo-flip w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#2F8D46] to-[#00C853] shadow-[0_0_0_2px_rgba(0,200,83,0.28)] overflow-hidden">
+          <div class="logo-face logo-front">
+            <img src="/images/rit_logo.png" alt="Code Nexus" class="h-full w-full object-contain" />
+          </div>
+          <div class="logo-face logo-back">
+            <img src="/images/gfg_logo.png" alt="GeeksforGeeks" class="h-full w-full object-contain" />
+          </div>
+        </div>
+      </a>
+      <div>
+        <div class="text-sm font-semibold">Code Nexus</div>
+        <div class="text-xs text-text-muted">Campus OS for GfG Coders</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="relative hidden md:block">
+        <input class="input pr-10" placeholder="Search problems, events, guilds..." />
+        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted">🔎</span>
+      </div>
+      <button class="btn-secondary" title="Notifications">🔔</button>
+      <div class="auth-buttons flex items-center gap-3">
+        <button onclick="AuthUI.showLoginModal()" class="btn-secondary">Sign In</button>
+        <button onclick="AuthUI.showSignupModal()" class="btn-primary">Sign Up</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="events.html">Events</a>
+      <a href="resources.html">Resources</a>
+      <a href="guilds.html">Guilds</a>
+      <a href="battle.html">Battle Arena</a>
+      <a href="profile.html">Profile</a>
+    </aside>
+
+    <main class="content">
+      <section class="mb-10">
+        <div class="flex flex-col lg:flex-row gap-8 items-start">
+          <div class="flex-1">
+            <h1 class="text-4xl font-bold">Welcome back, Rakesh</h1>
+            <p class="text-text-muted mt-2 max-w-2xl">This is your campus coding OS — a place built to turn daily practice into long-term power. Jump into battles, grow your guild, and track your GfG profile.</p>
+            <div class="mt-6 flex flex-wrap gap-3">
+              <a href="battle.html" class="btn-primary">Start a Battle</a>
+              <a href="events.html" class="btn-secondary">Join Next Hackathon</a>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-md">
+            <div class="card">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-sm text-text-muted">Coding Streak</div>
+                  <div class="text-3xl font-bold"><img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f525/512.gif" alt="Streak Fire" style="height: 24px; vertical-align: middle;">21</div>
+                </div>
+                <span class="tag">Weekly</span>
+              </div>
+            </div>
+            <div class="card">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-sm text-text-muted">Solved this week</div>
+                  <div class="text-3xl font-bold">12</div>
+                </div>
+                <span class="tag">DSA</span>
+              </div>
+            </div>
+            <div class="card">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-sm text-text-muted">Guild Power</div>
+                  <div class="text-3xl font-bold">1400</div>
+                </div>
+                <span class="tag">DSA Guild</span>
+              </div>
+            </div>
+            <div class="card">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-sm text-text-muted">Next Event</div>
+                  <div class="text-3xl font-bold">Hackathon Blitz</div>
+                </div>
+                <span class="tag">Mar 13</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="card">
+          <div class="card-title">Top Highlights</div>
+          <ul class="mt-4 space-y-3 text-text-muted">
+            <li>✅ Automatic GfG profile linking</li>
+            <li>✅ Live Battle Arena with XP rewards</li>
+            <li>✅ Guild leaderboards and weekly quests</li>
+            <li>✅ AI mentor suggestions (type "Graphs" on Mentor tab)</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Quick Actions</div>
+          <div class="mt-4 grid gap-3">
+            <a href="guilds.html" class="btn-secondary">Explore Guilds</a>
+            <a href="leaderboard.html" class="btn-secondary">View Leaderboard</a>
+            <a href="resources.html" class="btn-secondary">Open Learning Hub</a>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Your GfG Profile</div>
+          <p class="text-text-muted mt-2">Enter your GeeksforGeeks username on the Profile page to sync your real stats and redirect instantly.</p>
+          <a href="profile.html" class="btn-primary mt-4 inline-flex">Edit Profile</a>
+        </div>
+      </section>
+
+      <footer class="mt-16 text-sm text-text-muted">
+        © 2026 CODE NEXUS • Built for RIT Campus Club
+      </footer>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+<script src="script-animated-bg.js"></script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firebase Operations Test</title>
+</head>
+<body>
+  <h1>Testing Firebase Operations</h1>
+  <div id="output"></div>
+
+  <script type="module">
+    import {
+      createUser,
+      addAnnouncement,
+      addEvent,
+      addResource,
+      addAchievement,
+      addProject,
+      addBlogPost,
+      addDoubt,
+      createGuild,
+      recordBattle
+    } from './firebase-operations.js';
+
+    const output = document.getElementById('output');
+
+    async function runTests() {
+      try {
+        output.innerHTML += '<p>Starting Firebase operations tests...</p>';
+
+        // Create sample users for leaderboard with Tamil names
+        const users = [
+          { uid: 'user1', name: 'Arjun Kumar', email: 'arjun@example.com', handle: 'arjunk', level: 15, xp: 3200, rank: 1, solvedProblems: 450, streak: 45 },
+          { uid: 'user2', name: 'Priya Lakshmi', email: 'priya@example.com', handle: 'priyal', level: 14, xp: 2950, rank: 2, solvedProblems: 420, streak: 38 },
+          { uid: 'user3', name: 'Karthik Raja', email: 'karthik@example.com', handle: 'karthikr', level: 13, xp: 2750, rank: 3, solvedProblems: 395, streak: 42 },
+          { uid: 'user4', name: 'Anjali Devi', email: 'anjali@example.com', handle: 'anjalid', level: 12, xp: 2600, rank: 4, solvedProblems: 375, streak: 35 },
+          { uid: 'user5', name: 'Rahul Shankar', email: 'rahul@example.com', handle: 'rahuls', level: 12, xp: 2500, rank: 5, solvedProblems: 360, streak: 40 },
+          { uid: 'user6', name: 'Kavita Iyer', email: 'kavita@example.com', handle: 'kavitai', level: 11, xp: 2350, rank: 6, solvedProblems: 340, streak: 33 },
+          { uid: 'user7', name: 'Amit Narayan', email: 'amit@example.com', handle: 'amitn', level: 11, xp: 2200, rank: 7, solvedProblems: 320, streak: 37 },
+          { uid: 'user8', name: 'Sneha Krishnan', email: 'sneha@example.com', handle: 'snehak', level: 10, xp: 2100, rank: 8, solvedProblems: 305, streak: 30 },
+          { uid: 'user9', name: 'Rohit Venkatesh', email: 'rohit@example.com', handle: 'rohitv', level: 10, xp: 1950, rank: 9, solvedProblems: 290, streak: 28 },
+          { uid: 'user10', name: 'Meera Chandran', email: 'meera@example.com', handle: 'meerac', level: 9, xp: 1800, rank: 10, solvedProblems: 275, streak: 25 }
+        ];
+
+        for (const user of users) {
+          await createUser(user);
+        }
+        output.innerHTML += '<p>✓ 10 sample users created for leaderboard</p>';
+
+        // Test addAnnouncement
+        await addAnnouncement('Welcome to Code Nexus', 'Your coding journey starts here!');
+        await addAnnouncement('New Leaderboard Update', 'Check out the top performers this month!');
+        output.innerHTML += '<p>✓ Announcements added</p>';
+
+        // Test addEvent
+        await addEvent('Hackathon Blitz 2026', '48-hour coding competition', '2026-03-13');
+        await addEvent('AI Interview Prep Workshop', 'Master AI-powered interview techniques', '2026-03-18');
+        await addEvent('Weekly Code Jam', 'Live study session with DP problems', '2026-03-16');
+        await addEvent('Competitive Programming Contest', 'Monthly contest with prizes', '2026-03-25');
+        output.innerHTML += '<p>✓ Events added</p>';
+
+        // Test addResource - GeeksforGeeks resources
+        await addResource('Data Structures & Algorithms', 'Complete DSA roadmap for interviews', [
+          { title: 'GeeksforGeeks DSA', url: 'https://www.geeksforgeeks.org/data-structures/' },
+          { title: 'Array Data Structure', url: 'https://www.geeksforgeeks.org/array-data-structure/' },
+          { title: 'Linked List', url: 'https://www.geeksforgeeks.org/data-structures/linked-list/' },
+          { title: 'Stack Data Structure', url: 'https://www.geeksforgeeks.org/stack-data-structure/' },
+          { title: 'Queue Data Structure', url: 'https://www.geeksforgeeks.org/queue-data-structure/' }
+        ]);
+
+        await addResource('Algorithms', 'Essential algorithms every programmer should know', [
+          { title: 'GeeksforGeeks Algorithms', url: 'https://www.geeksforgeeks.org/fundamentals-of-algorithms/' },
+          { title: 'Sorting Algorithms', url: 'https://www.geeksforgeeks.org/sorting-algorithms/' },
+          { title: 'Searching Algorithms', url: 'https://www.geeksforgeeks.org/searching-algorithms/' },
+          { title: 'Dynamic Programming', url: 'https://www.geeksforgeeks.org/dynamic-programming/' },
+          { title: 'Greedy Algorithms', url: 'https://www.geeksforgeeks.org/greedy-algorithms/' }
+        ]);
+
+        await addResource('Web Development', 'Full-stack web development guide', [
+          { title: 'HTML Tutorial', url: 'https://www.geeksforgeeks.org/html-tutorial/' },
+          { title: 'CSS Tutorial', url: 'https://www.geeksforgeeks.org/css-tutorial/' },
+          { title: 'JavaScript Tutorial', url: 'https://www.geeksforgeeks.org/javascript-tutorial/' },
+          { title: 'React Tutorial', url: 'https://www.geeksforgeeks.org/react-tutorial/' },
+          { title: 'Node.js Tutorial', url: 'https://www.geeksforgeeks.org/nodejs-tutorial/' }
+        ]);
+
+        await addResource('Competitive Programming', 'Master competitive coding skills', [
+          { title: 'Competitive Programming', url: 'https://www.geeksforgeeks.org/competitive-programming/' },
+          { title: 'Time Complexity', url: 'https://www.geeksforgeeks.org/understanding-time-complexity-simple-examples/' },
+          { title: 'Space Complexity', url: 'https://www.geeksforgeeks.org/g-fact-86/' },
+          { title: 'Bit Manipulation', url: 'https://www.geeksforgeeks.org/bits-manipulation-important-tactics/' },
+          { title: 'Number Theory', url: 'https://www.geeksforgeeks.org/number-theory-competitive-programming/' }
+        ]);
+
+        await addResource('Machine Learning', 'ML algorithms and concepts', [
+          { title: 'Machine Learning', url: 'https://www.geeksforgeeks.org/machine-learning/' },
+          { title: 'Supervised Learning', url: 'https://www.geeksforgeeks.org/supervised-unsupervised-learning/' },
+          { title: 'Linear Regression', url: 'https://www.geeksforgeeks.org/ml-linear-regression/' },
+          { title: 'Decision Trees', url: 'https://www.geeksforgeeks.org/decision-tree/' },
+          { title: 'Neural Networks', url: 'https://www.geeksforgeeks.org/neural-networks-a-beginners-guide/' }
+        ]);
+
+        await addResource('System Design', 'Learn to design scalable systems', [
+          { title: 'System Design Tutorial', url: 'https://www.geeksforgeeks.org/system-design-tutorial/' },
+          { title: 'Load Balancing', url: 'https://www.geeksforgeeks.org/load-balancing-in-cloud-computing/' },
+          { title: 'Database Sharding', url: 'https://www.geeksforgeeks.org/database-sharding-a-system-design-concept/' },
+          { title: 'Caching', url: 'https://www.geeksforgeeks.org/caching-system-design-concept/' },
+          { title: 'Microservices', url: 'https://www.geeksforgeeks.org/microservices/' }
+        ]);
+        output.innerHTML += '<p>✓ GeeksforGeeks resources added</p>';
+
+        // Test addAchievement
+        await addAchievement('First Problem Solved', 'Congratulations on solving your first problem!', '🏆');
+        await addAchievement('Streak Master', 'Maintain a 30-day coding streak', '🔥');
+        await addAchievement('Contest Winner', 'Win your first coding contest', '🥇');
+        output.innerHTML += '<p>✓ Achievements added</p>';
+
+        // Test addProject
+        await addProject('E-commerce Platform', 'Full-stack e-commerce site with React and Node.js', 'https://github.com/user/ecommerce');
+        await addProject('Task Management App', 'Collaborative task manager with real-time updates', 'https://github.com/user/taskapp');
+        await addProject('Weather Dashboard', 'Beautiful weather app with charts and forecasts', 'https://github.com/user/weather');
+        output.innerHTML += '<p>✓ Projects added</p>';
+
+        // Test addBlogPost
+        await addBlogPost('My Journey to Becoming a Developer', 'From zero to hero in 6 months...', 'Aravind Kumar');
+        await addBlogPost('Solving Dynamic Programming Problems', 'A comprehensive guide to DP patterns', 'Priya Sharma');
+        await addBlogPost('Building Scalable Web Applications', 'Best practices for modern web dev', 'Vikram Singh');
+        output.innerHTML += '<p>✓ Blog posts added</p>';
+
+        // Test addDoubt
+        await addDoubt('How do I optimize my SQL queries for better performance?', 'user1');
+        await addDoubt('What are the differences between REST and GraphQL?', 'user2');
+        await addDoubt('How to handle state management in large React applications?', 'user3');
+        output.innerHTML += '<p>✓ Doubts added</p>';
+
+        // Test createGuild
+        await createGuild('DSA Masters', 'For competitive programming enthusiasts');
+        await createGuild('Web Wizards', 'Full-stack development experts');
+        await createGuild('AI Pioneers', 'Machine learning and AI specialists');
+        output.innerHTML += '<p>✓ Guilds created</p>';
+
+        // Test recordBattle
+        await recordBattle('user1', 'user2', 'user1');
+        await recordBattle('user3', 'user4', 'user3');
+        await recordBattle('user5', 'user1', 'user5');
+        output.innerHTML += '<p>✓ Battles recorded</p>';
+
+        output.innerHTML += '<p style="color: green; font-weight: bold;">All tests completed successfully! Check your Firestore database and visit the pages to see the data.</p>';
+
+      } catch (error) {
+        output.innerHTML += `<p style="color: red;">Error: ${error.message}</p>`;
+        console.error('Test error:', error);
+      }
+    }
+
+    // Run tests when page loads
+    runTests();
+  </script>
+</body>
+</html>

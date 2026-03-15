@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CODE NEXUS — Resources</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha512-6C4YRbnENTSD/jxUNjFtQSNOTU2ngf+CVIyYXlZIRgSIVax4C+c4kSj3eY0aqVBBL2XHfX5fjrI21M6pQh6Zpg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" integrity="sha512-IUg1Cp3xAyl5HakW9nqSbP8hIkWOn3uNVVO9tL1uZ+NAzF3zLXA02lzDQfCMc1+JM0dXnPpZEz2QXOa9VN0v9w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r158/three.min.js" integrity="sha512-d+eWQ29qaa9Nf8KdmimTX6SCrH1LnIEq8mFXyn7UVFpo2n9C+6O7XQ2p0eKlfc9GfFclzb8dXPk0t5bY88bKJg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="firebase-functions.js"></script>
+</head>
+<body data-page="resources" class="app">
+  <header class="topbar flex items-center justify-between px-6">
+    <div class="flex items-center gap-3">
+      <a href="flip.html" class="logo-link">
+        <div id="logo" class="logo-flip w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#2F8D46] to-[#00C853] shadow-[0_0_0_2px_rgba(0,200,83,0.28)] overflow-hidden">
+          <div class="logo-face logo-front">
+            <img src="/images/rit_logo.png" alt="Code Nexus" class="h-full w-full object-contain" />
+          </div>
+          <div class="logo-face logo-back">
+            <img src="/images/gfg_logo.png" alt="GeeksforGeeks" class="h-full w-full object-contain" />
+          </div>
+        </div>
+      </a>
+      <div>
+        <div class="text-sm font-semibold">Code Nexus</div>
+        <div class="text-xs text-text-muted">Learning Vault</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <button class="btn-secondary relative" title="Notifications" id="notificationBtn">🔔</button>
+      <div id="notificationDropdown" class="absolute top-16 right-0 bg-card border border-border rounded-lg shadow-lg p-4 w-80 hidden z-50">
+        <div class="text-sm font-semibold mb-2">Notifications</div>
+        <div id="notificationList" class="space-y-2 max-h-64 overflow-y-auto">
+          <!-- Notifications will be populated here -->
+        </div>
+      </div>
+      <a href="profile.html" class="btn-primary">My Profile</a>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="events.html">Events</a>
+      <a href="resources.html" class="active">Resources</a>
+      <a href="guilds.html">Guilds</a>
+      <a href="battle.html">Battle Arena</a>
+      <a href="profile.html">Profile</a>
+    </aside>
+
+    <main class="content">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Learning Resources</h1>
+        <button id="addResourceBtn" class="btn-primary hidden">Add Resource</button>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="resourcesContainer">
+        <div class="card">
+          <div class="card-title">Data Structures & Algorithms</div>
+          <p class="text-text-muted mt-2">Master fundamental data structures and algorithms for efficient problem-solving.</p>
+          <div class="mt-6 space-y-3">
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/data-structures/" target="_blank">Data Structures Tutorial</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/fundamentals-of-algorithms/" target="_blank">Algorithms Fundamentals</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/array-data-structure/" target="_blank">Arrays</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/linked-list-data-structure/" target="_blank">Linked Lists</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/stack-data-structure/" target="_blank">Stacks</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/queue-data-structure/" target="_blank">Queues</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/binary-tree-data-structure/" target="_blank">Binary Trees</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/binary-search-tree-data-structure/" target="_blank">Binary Search Trees</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/heap-data-structure/" target="_blank">Heaps</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/graph-data-structure-and-algorithms/" target="_blank">Graphs</a>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Web Development</div>
+          <p class="text-text-muted mt-2">Build modern web applications with HTML, CSS, JavaScript, and frameworks.</p>
+          <div class="mt-6 space-y-3">
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/web-development/" target="_blank">Web Development Guide</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/html/" target="_blank">HTML Tutorial</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/css/" target="_blank">CSS Tutorial</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/javascript/" target="_blank">JavaScript Tutorial</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/reactjs-tutorials/" target="_blank">React.js</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/nodejs/" target="_blank">Node.js</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/express-js/" target="_blank">Express.js</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/mongodb-tutorial/" target="_blank">MongoDB</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/rest-api/" target="_blank">REST APIs</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/web-security/" target="_blank">Web Security</a>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Competitive Programming</div>
+          <p class="text-text-muted mt-2">Prepare for coding competitions with advanced algorithms and problem-solving techniques.</p>
+          <div class="mt-6 space-y-3">
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/competitive-programming-a-complete-guide/" target="_blank">Competitive Programming Guide</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/dynamic-programming/" target="_blank">Dynamic Programming</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/greedy-algorithms/" target="_blank">Greedy Algorithms</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/backtracking-algorithms/" target="_blank">Backtracking</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/graph-algorithms/" target="_blank">Graph Algorithms</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/string-algorithms/" target="_blank">String Algorithms</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/number-theory/" target="_blank">Number Theory</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/bit-manipulation/" target="_blank">Bit Manipulation</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/mathematical-algorithms/" target="_blank">Mathematical Algorithms</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/game-theory/" target="_blank">Game Theory</a>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Machine Learning</div>
+          <p class="text-text-muted mt-2">Explore machine learning concepts, algorithms, and practical implementations.</p>
+          <div class="mt-6 space-y-3">
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/machine-learning/" target="_blank">Machine Learning Tutorial</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/supervised-unsupervised-learning/" target="_blank">Supervised & Unsupervised Learning</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/regression-in-machine-learning/" target="_blank">Regression</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/classification-in-machine-learning/" target="_blank">Classification</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/clustering-in-machine-learning/" target="_blank">Clustering</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/neural-networks/" target="_blank">Neural Networks</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/deep-learning-tutorial/" target="_blank">Deep Learning</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/natural-language-processing-nlp-tutorial/" target="_blank">Natural Language Processing</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/computer-vision/" target="_blank">Computer Vision</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/reinforcement-learning/" target="_blank">Reinforcement Learning</a>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">System Design</div>
+          <p class="text-text-muted mt-2">Learn to design scalable, reliable, and efficient systems and architectures.</p>
+          <div class="mt-6 space-y-3">
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/system-design-tutorial/" target="_blank">System Design Tutorial</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/design-patterns/" target="_blank">Design Patterns</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/microservices/" target="_blank">Microservices</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/load-balancing/" target="_blank">Load Balancing</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/caching/" target="_blank">Caching</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/database-sharding/" target="_blank">Database Sharding</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/message-queues-system-design/" target="_blank">Message Queues</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/api-gateway/" target="_blank">API Gateway</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/cap-theorem-in-dbms/" target="_blank">CAP Theorem</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/distributed-systems/" target="_blank">Distributed Systems</a>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Database Management</div>
+          <p class="text-text-muted mt-2">Master database concepts, SQL, NoSQL, and database design principles.</p>
+          <div class="mt-6 space-y-3">
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/dbms/" target="_blank">Database Management Systems</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/sql-tutorial/" target="_blank">SQL Tutorial</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/normalization-in-dbms/" target="_blank">Database Normalization</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/acid-properties-in-dbms/" target="_blank">ACID Properties</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/indexing-in-databases/" target="_blank">Indexing</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/transactions-in-dbms/" target="_blank">Transactions</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/nosql-databases/" target="_blank">NoSQL Databases</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/mongodb-tutorial/" target="_blank">MongoDB</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/redis-tutorial/" target="_blank">Redis</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/postgresql-tutorial/" target="_blank">PostgreSQL</a>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Programming Languages</div>
+          <p class="text-text-muted mt-2">Learn popular programming languages and their applications.</p>
+          <div class="mt-6 space-y-3">
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/c-programming-language/" target="_blank">C Programming</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/c-plus-plus/" target="_blank">C++ Programming</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/java/" target="_blank">Java Programming</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/python-programming-language/" target="_blank">Python Programming</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/javascript/" target="_blank">JavaScript</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/go-programming-language/" target="_blank">Go Programming</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/rust-programming-language/" target="_blank">Rust Programming</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/kotlin-programming-language/" target="_blank">Kotlin</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/swift-programming-language/" target="_blank">Swift</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/php/" target="_blank">PHP</a>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">DevOps & Tools</div>
+          <p class="text-text-muted mt-2">Master development operations, CI/CD, and essential developer tools.</p>
+          <div class="mt-6 space-y-3">
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/devops-tutorial/" target="_blank">DevOps Tutorial</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/git-tutorial/" target="_blank">Git Version Control</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/docker-tutorial/" target="_blank">Docker</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/kubernetes-tutorial/" target="_blank">Kubernetes</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/jenkins-tutorial/" target="_blank">Jenkins CI/CD</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/aws-tutorial/" target="_blank">AWS Cloud</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/linux-tutorial/" target="_blank">Linux</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/bash-scripting/" target="_blank">Bash Scripting</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/monitoring-tools/" target="_blank">Monitoring Tools</a>
+            <a class="btn-secondary w-full" href="https://www.geeksforgeeks.org/software-testing-tutorial/" target="_blank">Software Testing</a>
+          </div>
+        </div>
+      </div>
+
+      <footer class="mt-16 text-sm text-text-muted">© 2026 CODE NEXUS • Built for RIT Campus Club</footer>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+<script src="script-animated-bg.js"></script>
+  <script>
+    let currentUser = null;
+    window.FirebaseAuth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        window.location.href = 'login.html';
+      } else {
+        currentUser = user;
+        await checkAdmin();
+      }
+    });
+
+    async function checkAdmin() {
+      try {
+        const result = await window.FirebaseAuth.getUserData(currentUser.uid);
+        if (result.success && result.data.isAdmin) {
+          document.getElementById('addResourceBtn').classList.remove('hidden');
+        }
+      } catch (error) {
+        console.error('Error checking admin:', error);
+      }
+    }
+
+    document.getElementById('addResourceBtn').addEventListener('click', () => {
+      // Open modal to add resource
+      const title = prompt('Resource Title:');
+      const description = prompt('Description:');
+      const links = prompt('Links (JSON format: [{"title":"Link1","url":"url1"}] ):');
+      if (title && description && links) {
+        try {
+          const linksParsed = JSON.parse(links);
+          window.FirebaseAuth.addResource({ title, description, links: linksParsed }).then(result => {
+            if (result.success) {
+              // Reload page to show new resource
+              window.location.reload();
+            } else {
+              alert('Failed to add resource: ' + result.error);
+            }
+          });
+        } catch (e) {
+          alert('Invalid links format');
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+

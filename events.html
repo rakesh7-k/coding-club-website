@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CODE NEXUS — Events</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha512-6C4YRbnENTSD/jxUNjFtQSNOTU2ngf+CVIyYXlZIRgSIVax4C+c4kSj3eY0aqVBBL2XHfX5fjrI21M6pQh6Zpg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" integrity="sha512-IUg1Cp3xAyl5HakW9nqSbP8hIkWOn3uNVVO9tL1uZ+NAzF3zLXA02lzDQfCMc1+JM0dXnPpZEz2QXOa9VN0v9w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r158/three.min.js" integrity="sha512-d+eWQ29qaa9Nf8KdmimTX6SCrH1LnIEq8mFXyn7UVFpo2n9C+6O7XQ2p0eKlfc9GfFclzb8dXPk0t5bY88bKJg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="firebase-functions.js"></script>
+</head>
+<body data-page="events" class="app">
+  <header class="topbar flex items-center justify-between px-6">
+    <div class="flex items-center gap-3">
+      <a href="flip.html" class="logo-link">
+        <div id="logo" class="logo-flip w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#2F8D46] to-[#00C853] shadow-[0_0_0_2px_rgba(0,200,83,0.28)] overflow-hidden">
+          <div class="logo-face logo-front">
+            <img src="/images/rit_logo.png" alt="Code Nexus" class="h-full w-full object-contain" />
+          </div>
+          <div class="logo-face logo-back">
+            <img src="/images/gfg_logo.png" alt="GeeksforGeeks" class="h-full w-full object-contain" />
+          </div>
+        </div>
+      </a>
+      <div>
+        <div class="text-sm font-semibold">Code Nexus</div>
+        <div class="text-xs text-text-muted">Upcoming Events</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <button class="btn-secondary relative" title="Notifications" id="notificationBtn">🔔</button>
+      <div id="notificationDropdown" class="absolute top-16 right-0 bg-card border border-border rounded-lg shadow-lg p-4 w-80 hidden z-50">
+        <div class="text-sm font-semibold mb-2">Notifications</div>
+        <div id="notificationList" class="space-y-2 max-h-64 overflow-y-auto">
+          <!-- Notifications will be populated here -->
+        </div>
+      </div>
+      <a href="profile.html" class="btn-primary">My Profile</a>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="events.html" class="active">Events</a>
+      <a href="resources.html">Resources</a>
+      <a href="guilds.html">Guilds</a>
+      <a href="battle.html">Battle Arena</a>
+      <a href="profile.html">Profile</a>
+    </aside>
+
+    <main class="content">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Upcoming Events</h1>
+        <button id="addEventBtn" class="btn-primary hidden">Add Event</button>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="eventsContainer">
+        <!-- Events will be loaded here -->
+        <div class="card">
+          <div class="card-title">Hackathon Blitz 2026</div>
+          <p class="text-text-muted mt-2">A 48-hour live event where guilds compete to build the most innovative campus tool.</p>
+          <div class="mt-6 flex items-end justify-between">
+            <div>
+              <div class="text-2xl font-bold">Mar 13 - 15</div>
+              <div class="text-text-muted">Starts in</div>
+              <div class="text-4xl font-semibold mt-1" id="countdown">00:00:00</div>
+            </div>
+            <button class="btn-primary" id="registerHack">Register</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">AI Interview Prep Workshop</div>
+          <p class="text-text-muted mt-2">Master AI-powered interview techniques and practice with our advanced simulator.</p>
+          <div class="mt-6">
+            <div class="text-text-muted">Date</div>
+            <div class="text-2xl font-bold">Mar 18</div>
+            <button class="btn-secondary mt-4" onclick="registerForEvent('ai-workshop')">Register</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Weekly Code Jam</div>
+          <p class="text-text-muted mt-2">Join the live study room with calm music and shared problem-solving. This week's theme: Dynamic Programming.</p>
+          <div class="mt-6 flex items-center justify-between">
+            <div>
+              <div class="text-sm text-text-muted">Next Session</div>
+              <div class="text-xl font-semibold">Mar 16 • 7PM</div>
+            </div>
+            <button class="btn-secondary" onclick="registerForEvent('code-jam')">Join Now</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Competitive Programming Contest</div>
+          <p class="text-text-muted mt-2">Monthly contest with prizes. Test your skills against the best coders in the club.</p>
+          <div class="mt-6">
+            <div class="text-text-muted">Date</div>
+            <div class="text-2xl font-bold">Mar 25</div>
+            <button class="btn-secondary mt-4" onclick="registerForEvent('cp-contest')">Register</button>
+          </div>
+        </div>
+      </div>
+
+      <footer class="mt-16 text-sm text-text-muted">© 2026 CODE NEXUS • Built for RIT Campus Club</footer>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+<script src="script-animated-bg.js"></script>
+  <script>
+    let currentUser = null;
+    window.FirebaseAuth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        window.location.href = 'login.html';
+      } else {
+        currentUser = user;
+        await loadEvents();
+        await checkAdmin();
+      }
+    });
+
+    async function loadEvents() {
+      try {
+        const result = await window.FirebaseAuth.getEvents();
+        if (result.success) {
+          const events = result.data;
+          const container = document.getElementById('eventsContainer');
+          container.innerHTML = '';
+          events.forEach(event => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+              <div class="card-title">${event.title}</div>
+              <p class="text-text-muted mt-2">${event.description}</p>
+              <div class="mt-6">
+                <div class="text-text-muted">Date</div>
+                <div class="text-2xl font-bold">${new Date(event.date).toLocaleDateString()}</div>
+                <button class="btn-secondary mt-4" onclick="registerForEvent('${event.id}')">Register</button>
+              </div>
+            `;
+            container.appendChild(card);
+          });
+        }
+      } catch (error) {
+        console.error('Error loading events:', error);
+      }
+    }
+
+    async function checkAdmin() {
+      try {
+        const result = await window.FirebaseAuth.getUserData(currentUser.uid);
+        if (result.success && result.data.isAdmin) {
+          document.getElementById('addEventBtn').classList.remove('hidden');
+        }
+      } catch (error) {
+        console.error('Error checking admin:', error);
+      }
+    }
+
+    async function registerForEvent(eventId) {
+      try {
+        const result = await window.FirebaseAuth.registerForEvent(currentUser.uid, eventId);
+        if (result.success) {
+          alert('Registered successfully!');
+        } else {
+          alert('Registration failed: ' + result.error);
+        }
+      } catch (error) {
+        console.error('Error registering:', error);
+      }
+    }
+
+    document.getElementById('addEventBtn').addEventListener('click', () => {
+      // Open modal to add event
+      const title = prompt('Event Title:');
+      const description = prompt('Description:');
+      const date = prompt('Date (YYYY-MM-DD):');
+      if (title && description && date) {
+        window.FirebaseAuth.addEvent({ title, description, date }).then(result => {
+          if (result.success) {
+            loadEvents();
+          } else {
+            alert('Failed to add event: ' + result.error);
+          }
+        });
+      }
+    });
+
+    // Countdown timer for Hackathon Blitz
+    function updateCountdown() {
+      const eventDate = new Date('2026-03-13T00:00:00').getTime();
+      const now = new Date().getTime();
+      const distance = eventDate - now;
+
+      if (distance > 0) {
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById('countdown').innerHTML = 
+          `${days.toString().padStart(2, '0')}:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      } else {
+        document.getElementById('countdown').innerHTML = 'EVENT STARTED!';
+      }
+    }
+
+    // Update countdown every second
+    setInterval(updateCountdown, 1000);
+    updateCountdown(); // Initial call
+  </script>
+</body>
+</html>
+

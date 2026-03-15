@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CODE NEXUS — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha512-6C4YRbnENTSD/jxUNjFtQSNOTU2ngf+CVIyYXlZIRgSIVax4C+c4kSj3eY0aqVBBL2XHfX5fjrI21M6pQh6Zpg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" integrity="sha512-IUg1Cp3xAyl5HakW9nqSbP8hIkWOn3uNVVO9tL1uZ+NAzF3zLXA02lzDQfCMc1+JM0dXnPpZEz2QXOa9VN0v9w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r158/three.min.js" integrity="sha512-d+eWQ29qaa9Nf8KdmimTX6SCrH1LnIEq8mFXyn7UVFpo2n9C+6O7XQ2p0eKlfc9GfFclzb8dXPk0t5bY88bKJg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="firebase-functions.js"></script>
+  <script>
+    // Check authentication before loading the page
+    let currentUser = null;
+    window.FirebaseAuth.onAuthStateChanged((user) => {
+      if (!user) {
+        // Not authenticated, redirect to login
+        window.location.href = 'login.html';
+      } else {
+        currentUser = user;
+        loadDashboardData();
+      }
+    });
+
+    // Logout function
+    function logout() {
+      window.FirebaseAuth.signOut().then(() => {
+        window.location.href = 'login.html';
+      });
+    }
+
+    // Load dashboard data
+    async function loadDashboardData() {
+      try {
+        // Load user data
+        const userResult = await window.FirebaseAuth.getUserData(currentUser.uid);
+        if (userResult.success) {
+          const userData = userResult.data;
+          // Populate user data
+        }
+
+        // Load announcements
+        const announcementsResult = await window.FirebaseAuth.getAnnouncements();
+        if (announcementsResult.success) {
+          const announcements = announcementsResult.data;
+          const announcementsList = document.querySelector('.space-y-3');
+          announcementsList.innerHTML = '';
+          announcements.forEach(announcement => {
+            const li = document.createElement('li');
+            li.textContent = `• ${announcement.title} — ${announcement.description}`;
+            announcementsList.appendChild(li);
+          });
+        }
+
+        // Load achievements
+        const achievementsResult = await window.FirebaseAuth.getAchievements();
+        if (achievementsResult.success) {
+          const achievements = achievementsResult.data;
+          const achievementsList = document.getElementById('achievementsList');
+          achievementsList.innerHTML = '';
+          achievements.forEach(achievement => {
+            const div = document.createElement('div');
+            div.className = 'text-center';
+            div.innerHTML = `<div class="text-2xl">${achievement.icon || '🏆'}</div><div class="text-sm">${achievement.title}</div>`;
+            achievementsList.appendChild(div);
+          });
+        }
+
+        // Load projects
+        const projectsResult = await window.FirebaseAuth.getProjects();
+        if (projectsResult.success) {
+          const projects = projectsResult.data;
+          const projectGallery = document.getElementById('projectGallery');
+          projectGallery.innerHTML = '';
+          projects.forEach(project => {
+            const div = document.createElement('div');
+            div.className = 'border border-border rounded p-3';
+            div.innerHTML = `<div class="font-semibold">${project.title}</div><div class="text-sm text-text-muted">${project.description}</div>`;
+            projectGallery.appendChild(div);
+          });
+        }
+
+        // Load blog posts
+        const blogResult = await window.FirebaseAuth.getBlogPosts();
+        if (blogResult.success) {
+          const posts = blogResult.data;
+          const blogPosts = document.getElementById('blogPosts');
+          blogPosts.innerHTML = '';
+          posts.forEach(post => {
+            const div = document.createElement('div');
+            div.className = 'border border-border rounded p-3';
+            div.innerHTML = `<div class="font-semibold">${post.title}</div><div class="text-sm text-text-muted">${post.content.substring(0, 100)}...</div>`;
+            blogPosts.appendChild(div);
+          });
+        }
+
+        // Load doubts
+        const doubtsResult = await window.FirebaseAuth.getDoubts();
+        if (doubtsResult.success) {
+          const doubts = doubtsResult.data;
+          const doubtsList = document.getElementById('doubtsList');
+          doubtsList.innerHTML = '';
+          doubts.forEach(doubt => {
+            const div = document.createElement('div');
+            div.className = 'border border-border rounded p-3';
+            div.innerHTML = `<div class="font-semibold">${doubt.question}</div><div class="text-sm text-text-muted">${doubt.description}</div>`;
+            doubtsList.appendChild(div);
+          });
+        }
+
+      } catch (error) {
+        console.error('Error loading dashboard data:', error);
+      }
+    }
+
+    // Event listeners for buttons
+    document.getElementById('addProjectBtn').addEventListener('click', () => {
+      const title = prompt('Project Title:');
+      const description = prompt('Description:');
+      if (title && description) {
+        window.FirebaseAuth.addProject({ title, description, userId: currentUser.uid, userName: currentUser.displayName || currentUser.email }).then(result => {
+          if (result.success) {
+            loadDashboardData();
+          }
+        });
+      }
+    });
+
+    document.getElementById('addBlogBtn').addEventListener('click', () => {
+      const title = prompt('Blog Title:');
+      const content = prompt('Content:');
+      if (title && content) {
+        window.FirebaseAuth.addBlogPost({ title, content, userId: currentUser.uid, userName: currentUser.displayName || currentUser.email }).then(result => {
+          if (result.success) {
+            loadDashboardData();
+          }
+        });
+      }
+    });
+
+    document.getElementById('askDoubtBtn').addEventListener('click', () => {
+      const question = prompt('Your Question:');
+      const description = prompt('Description:');
+      if (question && description) {
+        window.FirebaseAuth.addDoubt({ question, description, userId: currentUser.uid, userName: currentUser.displayName || currentUser.email }).then(result => {
+          if (result.success) {
+            loadDashboardData();
+          }
+        });
+      }
+    });
+
+    document.getElementById('mentorBtn').addEventListener('click', async () => {
+      const topic = document.getElementById('mentorInput').value;
+      if (topic) {
+        // For now, static response
+        document.getElementById('mentorOutput').textContent = `Micro-roadmap for ${topic}: 1. Basics, 2. Advanced, 3. Practice. Check GfG links.`;
+      }
+    });
+  </script>
+</head>
+<body data-page="dashboard" class="app">
+  <header class="topbar flex items-center justify-between px-6">
+    <div class="flex items-center gap-3">
+      <a href="flip.html" class="logo-link">
+        <div id="logo" class="logo-flip w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#2F8D46] to-[#00C853] shadow-[0_0_0_2px_rgba(0,200,83,0.28)] overflow-hidden">
+          <div class="logo-face logo-front">
+            <img src="/images/rit_logo.png" alt="Code Nexus" class="h-full w-full object-contain" />
+          </div>
+          <div class="logo-face logo-back">
+            <img src="/images/gfg_logo.png" alt="GeeksforGeeks" class="h-full w-full object-contain" />
+          </div>
+        </div>
+      </a>
+      <div>
+        <div class="text-sm font-semibold">Code Nexus</div>
+        <div class="text-xs text-text-muted">Hangar: Dashboard</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="relative hidden md:block">
+        <input class="input pr-10" placeholder="Search challenges, guilds..." />
+        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted">🔎</span>
+      </div>
+      <button class="btn-secondary relative" title="Notifications" id="notificationBtn">🔔</button>
+      <div id="notificationDropdown" class="absolute top-16 right-0 bg-card border border-border rounded-lg shadow-lg p-4 w-80 hidden z-50">
+        <div class="text-sm font-semibold mb-2">Notifications</div>
+        <div id="notificationList" class="space-y-2 max-h-64 overflow-y-auto">
+          <!-- Notifications will be populated here -->
+        </div>
+      </div>
+      <a href="profile.html" class="btn-primary">My Profile</a>
+      <button onclick="logout()" class="btn-secondary">Logout</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="events.html">Events</a>
+      <a href="resources.html">Resources</a>
+      <a href="guilds.html">Guilds</a>
+      <a href="battle.html">Battle Arena</a>
+      <a href="profile.html">Profile</a>
+    </aside>
+
+    <main class="content app">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div class="card">
+          <div class="card-title">Weekly Snapshot</div>
+          <div class="mt-4 grid gap-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm text-text-muted">Solved Problems</div>
+                <div class="text-2xl font-bold">32</div>
+              </div>
+              <div class="tag">+12%</div>
+            </div>
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm text-text-muted">Coding Streak</div>
+                <div class="text-2xl font-bold">21 days</div>
+              </div>
+              <div class="tag">
+                <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f525/512.gif" alt="Burning streak" class="streak-gif" />
+                
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm text-text-muted">XP Points</div>
+                <div class="text-2xl font-bold">1,780</div>
+              </div>
+              <div class="tag">Level 8</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Guild Status</div>
+          <div class="mt-4 grid gap-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm text-text-muted">Active Guild</div>
+                <div class="text-xl font-semibold">DSA Guild</div>
+              </div>
+              <span class="tag">Joined</span>
+            </div>
+            <div class="text-text-muted">Weekly guild challenge: Solve 180 problems together.</div>
+            <button class="btn-primary w-full">Visit Guild</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Quick Actions</div>
+          <div class="mt-4 grid gap-3">
+            <a href="battle.html" class="btn-secondary">Start Battle</a>
+            <a href="events.html" class="btn-secondary">Join Hackathon</a>
+            <a href="resources.html" class="btn-secondary">Open Resource Vault</a>
+            <button id="progressReportBtn" class="btn-secondary">View Progress Report</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="card">
+          <div class="card-title">Club Announcements</div>
+          <ul class="mt-4 space-y-3 text-text-muted">
+            <li>• Hackathon Blitz starts Mar 13 — Register in Events.</li>
+            <li>• New leaderboard spikes every Monday at 9AM.</li>
+            <li>• Guild war announced: DSA vs AI this weekend.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">AI Mentor Playground</div>
+          <p class="text-text-muted mt-2">Type a topic below and get a curated micro-roadmap with GfG links.</p>
+          <div class="mt-4 grid gap-3">
+            <input id="mentorInput" class="input" placeholder="e.g. Graphs" />
+            <button id="mentorBtn" class="btn-primary">Ask Mentor</button>
+            <div id="mentorOutput" class="text-text-muted text-sm leading-relaxed"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Recent Achievements</div>
+          <div class="mt-4 grid grid-cols-2 gap-3" id="achievementsList"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Project Gallery</div>
+          <p class="text-text-muted mt-2">Showcase your coding projects and find collaborators.</p>
+          <div class="mt-4 grid gap-3" id="projectGallery"></div>
+          <button id="addProjectBtn" class="btn-secondary mt-4">Add New Project</button>
+        </div>
+        <div class="card">
+          <div class="card-title">Community Blog</div>
+          <p class="text-text-muted mt-2">Latest posts from club members.</p>
+          <div class="mt-4 grid gap-3" id="blogPosts"></div>
+          <button id="addBlogBtn" class="btn-secondary mt-4">Write Post</button>
+        </div>
+        <div class="card">
+          <div class="card-title">Doubt Resolution Portal</div>
+          <p class="text-text-muted mt-2">Ask questions and get answers from the community.</p>
+          <div class="mt-4 grid gap-3" id="doubtsList"></div>
+          <button id="askDoubtBtn" class="btn-secondary mt-4">Ask a Question</button>
+        </div>
+      </div>
+
+      <footer class="mt-16 text-sm text-text-muted">© 2026 CODE NEXUS • Built for RIT Campus Club</footer>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+<script src="script-animated-bg.js"></script>
+</body>
+</html>
