@@ -1,39 +1,47 @@
-# CODE NEXUS (GeeksforGeeks Campus Club Prototype)
+# GeeksforGeeks Firebase Campus Club Frontend
 
-This workspace contains a frontend prototype (static HTML/CSS/JS) and a complete backend scaffold built with Django.
+This repository is a static web app prototype with Firebase authentication, Firestore data storage, and in-browser UI for club management features.
 
-## 📦 Structure
-
-The workspace is split into two main parts:
+## 📦 Project structure
 
 ```
 / (repo root)
-├─ index.html           # Static prototype landing page
-├─ dashboard.html       # Static prototype dashboard page
-├─ ... (other static HTML pages)
-├─ styles.css           # Shared CSS for static prototype
-├─ script.js            # Shared JS for static prototype
-└─ backend/             # Full Django backend app
-   ├─ manage.py
-   ├─ requirements.txt
-   ├─ codenexus/         # Django project settings + urls
-   │  ├─ settings.py
-   │  ├─ urls.py
-   │  └─ wsgi.py
-   └─ core/              # Main Django app
-      ├─ models.py
-      ├─ views.py
-      ├─ templates/core/  # Django HTML templates
-      ├─ static/core/     # Django static assets (CSS/JS)
-      └─ migrations/
+├─ index.html         # Landing page
+├─ login.html         # Login screen
+├─ dashboard.html     # User dashboard
+├─ guilds.html        # Club/guild management
+├─ events.html        # Event listings
+├─ leaderboard.html   # Leaderboard view
+├─ profile.html       # User profile
+├─ admin.html         # Admin panel
+├─ script.js          # Main app logic
+├─ firebase-operations.js # Firebase helpers (auth/db/functions)
+├─ firebase-functions.js  # Cloud Functions client wrappers
+├─ firebase-config.js     # Firebase config object
+├─ styles.css         # Shared styles
+├─ images/            # UI assets
+├─ README-FIREBASE.md # Firebase setup instructions
+├─ GOOGLE_OAUTH_SETUP.md # Google OAuth setup guide
+└─ ...
 ```
 
-- **Static frontend (quick prototype)**: HTML/CSS/JS files live at the root.
-- **Django backend**: under `backend/`, with models, templates, views, and admin.
+- **Frontend**: plain HTML/CSS/JS SPA-style pages.
+- **Firebase integration**: hosted in `firebase-config.js`, `firebase-operations.js`, and `firebase-functions.js`.
 
-## ▶️ Running the Django backend
-See `backend/README.md` for setup and run instructions.
+## 🔧 Setup
 
----
+1. Copy `firebase-config.example.js` to `firebase-config.js` (if present), or replace placeholders with your Firebase project config values.
+2. Follow `README-FIREBASE.md` (and `GOOGLE_OAUTH_SETUP.md`) to configure Firestore rules and OAuth.
+3. Serve files locally (e.g., with `npx http-server` or `python -m http.server`).
 
-If you prefer to keep using the simple static HTML version, open `index.html` in your browser.
+## ▶️ Run
+
+- Open `index.html` in a browser, or use a local static server for full Firebase URL behavior.
+- Sign in via Google to access dashboard, events, and guild management.
+
+## 🛠 Notes
+
+- No Django backend is included in this repository.
+- Backend logic is handled through Firebase and Firebase Cloud Functions.
+- For Firebase functions deployment, use Firebase CLI (`firebase deploy --only functions`).
+
